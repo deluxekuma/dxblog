@@ -301,14 +301,48 @@ svg {
   font-size: 12px;
   font-weight: 500;
   padding: 4px 0;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+  position: relative;
 }
-.nav-item svg { width: 22px; height: 22px; transition: transform .2s var(--ease); }
-.nav-item.active { color: var(--on-secondary-container); }
-.nav-item.active svg {
-  background: var(--secondary-container);
-  border-radius: var(--r-full);
-  padding: 4px 14px;
+
+/* 圖示外層：固定尺寸，不隨 active 改變，避免佈局跳動 */
+.nav-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
   width: 64px;
   height: 32px;
-  box-sizing: content-box;
+  flex: 0 0 auto;
 }
+
+/* 用膠囊背景表現 active，不動 svg 本身 */
+.nav-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-full);
+  background: var(--secondary-container);
+  transform: scaleX(.6);
+  opacity: 0;
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+
+.nav-item svg {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  transition: transform .2s var(--ease);
+}
+
+.nav-item.active { color: var(--on-secondary-container); }
+.nav-item.active .nav-icon::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.nav-item.active svg { transform: scale(1.05); }
+
+.nav-label { line-height: 1; }

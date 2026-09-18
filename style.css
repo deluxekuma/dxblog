@@ -275,6 +275,20 @@ svg {
   opacity: .6;
 }
 
+/* ===== 波紋 ===== */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .28;
+  transform: scale(0);
+  pointer-events: none;
+  animation: ripple .5s var(--ease) forwards;
+}
+@keyframes ripple {
+  to { transform: scale(2.2); opacity: 0; }
+}
+
 /* ===== 底部導航 ===== */
 .bottom-nav {
   position: fixed;
@@ -284,6 +298,7 @@ svg {
   z-index: 30;
   display: flex;
   justify-content: space-around;
+  align-items: center;
   padding: 12px 8px calc(12px + env(safe-area-inset-bottom));
   background: var(--surface-container);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
@@ -295,17 +310,35 @@ svg {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   text-decoration: none;
   color: var(--on-surface-variant);
   font-size: 12px;
   font-weight: 500;
   padding: 4px 0;
-  background: transparent;
+  /* button 預設樣式全部歸零，避免蓋掉底部導航底色 */
+  background: none;
   border: 0;
+  margin: 0;
   font-family: inherit;
+  line-height: inherit;
   cursor: pointer;
   position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  /* 點擊時不讓瀏覽器把按鈕捲進可視範圍，避免頁面往上跑 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+}
+.nav-item:focus { outline: none; }
+.nav-item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--r-md);
 }
 
 /* 圖示外層：固定尺寸，不隨 active 改變，避免佈局跳動 */

@@ -54,14 +54,10 @@
     });
   });
 
-  /* ---- 波紋回饋（Material 觸感） ---- */
-  /* 底部導航不套波紋：避免 span 撐動 fixed 佈局造成跳動 */
+  /* ---- 波紋回饋：只給 .btn / .chip / .icon-btn ---- */
+  /* 底部導航刻意不套波紋，避免在 fixed 容器內累積多餘節點 */
   const rippleTargets = document.querySelectorAll('.btn, .chip, .icon-btn');
   rippleTargets.forEach(function (el) {
-    if (getComputedStyle(el).position === 'static') {
-      el.style.position = 'relative';
-    }
-    el.style.overflow = 'hidden';
     el.addEventListener('pointerdown', function (e) {
       const rect = el.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
@@ -75,17 +71,11 @@
     });
   });
 
-  /* ---- 底部導航：斷開 focus 捲動，避免 fixed bar 往上跳 ---- */
-  const navItems = document.querySelectorAll('.nav-item');
+  /* ---- 底部導航：只切換 active，斷開任何可能造成位移的行為 ---- */
+  const navItems = Array.from(document.querySelectorAll('.nav-item'));
   navItems.forEach(function (item) {
-    item.addEventListener('pointerdown', function (e) {
-      e.preventDefault();
-    });
     item.addEventListener('click', function (e) {
       e.preventDefault();
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
       navItems.forEach(function (n) { n.classList.remove('active'); });
       item.classList.add('active');
     });

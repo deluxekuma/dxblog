@@ -96,6 +96,7 @@ body {
   line-height: 1.6;
   padding-bottom: calc(88px + env(safe-area-inset-bottom));
   transition: background .3s var(--ease), color .3s var(--ease);
+  overflow-x: hidden;
 }
 
 svg {
@@ -132,6 +133,8 @@ svg {
 }
 
 .icon-btn {
+  position: relative;
+  overflow: hidden;
   display: grid;
   place-items: center;
   width: 48px;
@@ -141,6 +144,8 @@ svg {
   background: transparent;
   color: var(--on-surface-variant);
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
   transition: background .2s var(--ease);
 }
 .icon-btn:active { background: color-mix(in srgb, var(--on-surface) 12%, transparent); }
@@ -155,7 +160,7 @@ svg {
 
 /* 卡片 */
 .card {
-  background: var(--surface-container-low, var(--surface-container));
+  background: var(--surface-container, #F3EDF7);
   border-radius: var(--r-lg);
   overflow: hidden;
 }
@@ -180,6 +185,8 @@ svg {
 
 /* 按鈕 */
 .btn {
+  position: relative;
+  overflow: hidden;
   border: 0;
   cursor: pointer;
   font: inherit;
@@ -187,6 +194,8 @@ svg {
   font-weight: 500;
   padding: 10px 24px;
   border-radius: var(--r-full);
+  -webkit-appearance: none;
+  appearance: none;
   transition: box-shadow .2s var(--ease), transform .1s var(--ease);
 }
 .btn.filled { background: var(--primary); color: var(--on-primary); }
@@ -204,6 +213,8 @@ svg {
 .chips::-webkit-scrollbar { display: none; }
 
 .chip {
+  position: relative;
+  overflow: hidden;
   flex: 0 0 auto;
   font: inherit;
   font-size: 14px;
@@ -214,6 +225,8 @@ svg {
   background: transparent;
   color: var(--on-surface-variant);
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
   transition: background .2s var(--ease), border-color .2s var(--ease);
 }
 .chip.selected {
@@ -275,7 +288,7 @@ svg {
   opacity: .6;
 }
 
-/* ===== 波紋 ===== */
+/* ===== 波紋（只給卡片、chips、頂部圖示按鈕） ===== */
 .ripple {
   position: absolute;
   border-radius: 50%;
@@ -303,23 +316,10 @@ svg {
   background: var(--surface-container);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   box-shadow: var(--shadow-lg);
-  /* 讓 fixed bar 不隨焦點捲動而位移 */
-  transform: translateZ(0);
-  will-change: transform;
-  contain: layout paint;
   touch-action: manipulation;
 }
 
-/* 導航按鈕不做焦點捲動，避免手機點擊時整條 bar 跳動 */
-.nav-item {
-  -webkit-touch-callout: none;
-  touch-action: manipulation;
-}
-.nav-item:focus,
-.nav-item:focus-visible {
-  outline: none;
-}
-
+/* 導航按鈕：外觀完全歸零，不做波紋、不撐大、不做焦點捲動 */
 .nav-item {
   flex: 1;
   display: flex;
@@ -327,36 +327,27 @@ svg {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  text-decoration: none;
-  color: var(--on-surface-variant);
-  font-size: 12px;
-  font-weight: 500;
   padding: 4px 0;
-  /* button 預設樣式全部歸零，避免蓋掉底部導航底色 */
   background: none;
   border: 0;
   margin: 0;
   font-family: inherit;
-  line-height: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--on-surface-variant);
   cursor: pointer;
-  position: relative;
   -webkit-appearance: none;
   appearance: none;
-  /* 點擊時不讓瀏覽器把按鈕捲進可視範圍，避免頁面往上跑 */
   -webkit-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  overflow: hidden;
-  border-radius: var(--r-lg);
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  outline: none;
 }
-.nav-item:focus { outline: none; }
-.nav-item:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: var(--r-md);
-}
+.nav-item:focus,
+.nav-item:focus-visible { outline: none; }
 
-/* 圖示外層：固定尺寸，不隨 active 改變，避免佈局跳動 */
 .nav-icon {
   position: relative;
   display: grid;
@@ -366,7 +357,7 @@ svg {
   flex: 0 0 auto;
 }
 
-/* 用膠囊背景表現 active，不動 svg 本身 */
+/* 用膠囊背景表現 active，svg 尺寸固定不動 */
 .nav-icon::before {
   content: "";
   position: absolute;
@@ -383,7 +374,6 @@ svg {
   z-index: 1;
   width: 22px;
   height: 22px;
-  transition: transform .2s var(--ease);
 }
 
 .nav-item.active { color: var(--on-secondary-container); }
@@ -391,6 +381,5 @@ svg {
   opacity: 1;
   transform: scaleX(1);
 }
-.nav-item.active svg { transform: scale(1.05); }
 
 .nav-label { line-height: 1; }
